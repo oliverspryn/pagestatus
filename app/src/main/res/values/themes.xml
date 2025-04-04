@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        Wondering how this theming framework is setup?
+        This is the framework inheritance hierarchy:
+
+        ┌──────────────────────────────────────┐
+        │ Theme.Material3.DayNight.NoActionBar │
+        └──────────────────────────────────────┘
+                           ▲
+                           │
+              ┌────────────┴─────────────┐
+              │ Platform.V21.Theme.MyApp │
+              └──────────────────────────┘
+                           ▲
+                           │
+                ┌──────────┴───────────┐
+                │ Platform.Theme.MyApp │
+                └──────────────────────┘
+                           ▲
+                           │
+                 ┌─────────┴────────┐
+                 │ Base.Theme.MyApp │
+                 └──────────────────┘
+                           ▲
+                           │
+                    ┌──────┴──────┐
+                    │ Theme.MyApp │
+                    └─────────────┘
+
+        The framework was inspired by these two sources:
+          - https://medium.com/monzo-bank/refactoring-android-themes-with-style-restructuring-themes-15230569e50
+          - https://chris.banes.dev/developing-themes-with-style-berlin/
+
+        Although most of the theming takes place inside of Jetpack Compose, some broader
+        aspects must be defined here. There are five layers to the theme:
+
+          1. Framework theme: Theme.Material3.DayNight.NoActionBar. Used as the foundation
+             from the Android Material 3 library. Defines the most fundamental aspects of
+             the presentation, and defines a very stock, out-of-the-box look without any
+             custom branding.
+          2. Platform theme: Platform.V21.Theme.MyApp and Platform.Theme.MyApp. V21
+             indicates the earliest version of Android that is supported. This layer allows
+             us to specify styles which are specific to particular versions of Android. As
+             Android matures, we may wish to use a new style or attribute that is available
+             in newer versions of Android. For example, if API 26 started to offer a new
+             style that we wanted to use for API 26 and higher versions, we would create a
+             custom theme file for API 26+ using resource qualifiers. That style would
+             inherit from the older version, like so:
+
+             <style name="Platform.V26.Theme.MyApp" parent="Platform.V21.Theme.MyApp" />
+             <style name="Platform.Theme.MyApp" parent="Platform.V26.Theme.MyApp" />
+
+             V21 should always be kept up-to-date with the minimum supported API level.
+          3. Base theme: Base.Theme.MyApp. The place to override default styles that is
+             common across all platforms. That is to say, if there is a style that supported
+             all of the way back to API 21 and above, it should go here. Example of what
+             would go in here are things like view and text appearances. Colors should not
+             go here, since they may change based on light mode, dark mode, or user-defined
+             themes.
+          4. App theme: Theme.MyApp. The theme which is applied to the relevant Activity
+             classes in the manifest. This layer defines many of the colors on top of all
+             of the previous layers. This approach makes it easy to add custom themes since
+             only this level of the theme much changes. Thus, branding changes or dark-mode
+             support becomes trivial to achieve.
+    -->
+
+    <!-- region Platform Theme -->
+
+    <style name="Platform.V21.Theme.PageStatus" parent="Theme.Material3.DayNight.NoActionBar" />
+
+    <style name="Platform.Theme.PageStatus" parent="Platform.V21.Theme.PageStatus" />
+
+    <!-- endregion -->
+
+    <!-- region Base Theme -->
+
+    <style name="Base.Theme.PageStatus" parent="Platform.Theme.PageStatus" />
+
+    <!-- endregion -->
+
+    <!-- region App Theme -->
+
+    <style name="Theme.PageStatus" parent="Base.Theme.PageStatus" />
+
+    <!-- endregion -->
+</resources>
